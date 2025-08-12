@@ -62,10 +62,10 @@ jobs:
             $ver = ($xml.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ } | Select-Object -First 1)
           }
           if (-not $ver) { throw 'Unable to resolve version. Provide input or ensure tag starts with v<version> or csproj contains <Version>.' }
-          echo "Resolved version: $ver"
-          # In PowerShell use $env:GITHUB_OUTPUT (not $GITHUB_OUTPUT)
-          echo "version=$ver" >> $env:GITHUB_OUTPUT
-          echo "PKGVER=$ver" >> $env:GITHUB_ENV
+          Write-Host "Resolved version: $ver"
+          # Write step output and also export as env for later steps
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$ver"
+          Add-Content -Path $env:GITHUB_ENV -Value "PKGVER=$ver"
 
       - name: Validate Secrets
         shell: pwsh
@@ -119,10 +119,10 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: v${{ steps.version.outputs.version }}
+          tag_name: v${{ env.PKGVER }}
+          name: v${{ env.PKGVER }}
           draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          prerelease: ${{ contains(env.PKGVER, '-') }}
           files: |
             nupkg/*.nupkg
             nupkg/*.snupkg

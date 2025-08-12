@@ -19,7 +19,7 @@ jobs:
     runs-on: windows-2022
     env:
       PROJECT_PATH: Avalonia.Controls.DataGrid.HeaderFilter.csproj
-      PACKAGE_ID: hoowee.Avalonia.Controls.DataGrid.HeaderFilter
+      PACKAGE_ID: AvaloniaDataGridHeaderFilter
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout

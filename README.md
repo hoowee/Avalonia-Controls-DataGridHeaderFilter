@@ -1,4 +1,4 @@
-# DataGridHeaderFilter.Avalonia.Controls 使用指南
+# Avalonia.Controls.DataGrid.HeaderFilter 使用指南
 
 本指南介绍如何在 Avalonia 11 应用中集成并使用 DataGrid 列头筛选组件（Avalonia.Controls.DataGrid.HeaderFilter）。
 

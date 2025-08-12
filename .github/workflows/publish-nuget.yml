@@ -19,7 +19,7 @@ jobs:
     runs-on: windows-2022
     env:
       PROJECT_PATH: Avalonia.Controls.DataGrid.HeaderFilter.csproj
-      PACKAGE_ID: Avalonia.Controls.DataGrid.HeaderFilter
+      PACKAGE_ID: hoowee.Avalonia.Controls.DataGrid.HeaderFilter
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout
@@ -125,7 +125,7 @@ jobs:
             --skip-duplicate
 
           Write-Host "Package pushed successfully!"
-          
+
           # Check if symbol package exists and log it
           $symbolPath = "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg"
           if (Test-Path $symbolPath) {

@@ -8,9 +8,9 @@
     <AssemblyName>Avalonia.Controls.DataGrid.HeaderFilter</AssemblyName>
     <RootNamespace>Avalonia.Controls.DataGridHeaderFilter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>Avalonia.Controls.DataGrid.HeaderFilter</PackageId>
+    <PackageId>hoowee.Avalonia.Controls.DataGrid.HeaderFilter</PackageId>
     <Title>Avalonia Controls DataGrid HeaderFilter</Title>
-  <Version>0.1.4</Version>
+  <Version>0.1.7</Version>
     <Authors>Huwei96</Authors>
     <Company>Huwei96</Company>
     <Description>Header filter control for Avalonia DataGrid with popup filter panel, tri-state select, search, and sort-compatible filtering.</Description>

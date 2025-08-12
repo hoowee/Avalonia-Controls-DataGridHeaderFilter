@@ -80,10 +80,10 @@ jobs:
           $pkgVer = $env:PKGVER
           function Build-TFMs($tfms) {
             dotnet build $env:PROJECT_PATH -c Release `
-              -p:PackageVersion=$pkgVer `
-              -p:Version=$pkgVer `
+              -p:PackageVersion="$pkgVer" `
+              -p:Version="$pkgVer" `
               -p:ContinuousIntegrationBuild=true `
-              -p:TargetFrameworks="$tfms"
+              -p:TargetFrameworks=`"$tfms`"
           }
           try {
             Build-TFMs "net9.0;net8.0;net7.0;net6.0"
@@ -104,10 +104,10 @@ jobs:
           $tfms = $env:TFMS_BUILT
           if (-not $tfms) { throw 'TFMS_BUILT is empty. Build step may have failed.' }
           dotnet pack $env:PROJECT_PATH -c Release `
-            -p:PackageVersion=$pkgVer `
-            -p:Version=$pkgVer `
+            -p:PackageVersion="$pkgVer" `
+            -p:Version="$pkgVer" `
             -p:ContinuousIntegrationBuild=true `
-            -p:TargetFrameworks="$tfms" `
+            -p:TargetFrameworks=`"$tfms`" `
             -p:NoBuild=true `
             -o nupkg
 

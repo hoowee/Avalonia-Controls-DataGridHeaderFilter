@@ -19,11 +19,20 @@
     <RepositoryUrl>https://github.com/hoowee/Avalonia-Controls-DataGridHeaderFilter</RepositoryUrl>
     <PackageProjectUrl>https://github.com/hoowee/Avalonia-Controls-DataGridHeaderFilter</PackageProjectUrl>
     <PackageTags>avalonia;datagrid;filter;header;sorting;ui;mvvm</PackageTags>
+  <RepositoryType>git</RepositoryType>
+  <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  <IncludeSymbols>true</IncludeSymbols>
+  <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  <!-- Pack 时可用标签/CI 传入 PackageVersion 覆盖 <Version> -->
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.3" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.3" />
+  <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

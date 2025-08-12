@@ -1,0 +1,84 @@
+name: Publish NuGet
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g. 0.1.1)'
+        required: false
+
+jobs:
+  pack-and-push:
+    runs-on: windows-latest
+    env:
+      PROJECT_PATH: Avalonia.Controls.DataGrid.HeaderFilter.csproj
+      PACKAGE_ID: Avalonia.Controls.DataGrid.HeaderFilter
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore $env:PROJECT_PATH
+
+      - name: Determine Version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_EVENT_NAME -eq 'workflow_dispatch' -and '${{ github.event.inputs.version }}') {
+            $ver = '${{ github.event.inputs.version }}'
+          } else {
+            # tag format vX.Y.Z or vX.Y.Z-preview1
+            $tag = '${{ github.ref_name }}'
+            if ($tag -match '^v(?<v>[0-9]+\.[0-9]+\.[0-9]+.*)$') { $ver = $Matches['v'] } else { throw 'Tag name must start with v' }
+          }
+          echo "Resolved version: $ver"
+          echo "version=$ver" >> $GITHUB_OUTPUT
+
+      - name: Build & Pack
+        run: >-
+          dotnet pack $env:PROJECT_PATH -c Release
+          -p:PackageVersion=${{ steps.version.outputs.version }}
+          -p:ContinuousIntegrationBuild=true
+          --no-restore
+          -o nupkg
+
+      - name: Show packages
+        run: dir nupkg
+
+      - name: Push package
+        run: >-
+          dotnet nuget push "nupkg/$env:PACKAGE_ID.${{ steps.version.outputs.version }}.nupkg"
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+
+      - name: Push symbols
+        run: >-
+          dotnet nuget push "nupkg/$env:PACKAGE_ID.${{ steps.version.outputs.version }}.snupkg"
+          --api-key ${{ secrets.NUGET_API_KEY }}
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
+        continue-on-error: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          files: |
+            nupkg/*.nupkg
+            nupkg/*.snupkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Avalonia.Controls.DataGridHeaderFilter.Models;
+using Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;
 
 public sealed class DataGridFilterHost
 {

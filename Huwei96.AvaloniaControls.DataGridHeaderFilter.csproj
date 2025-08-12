@@ -5,12 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <AssemblyName>Avalonia.Controls.DataGrid.HeaderFilter</AssemblyName>
-    <RootNamespace>Avalonia.Controls.DataGridHeaderFilter</RootNamespace>
+    <AssemblyName>Huwei96.AvaloniaControls.DataGridHeaderFilter</AssemblyName>
+    <RootNamespace>Huwei96.AvaloniaControls.DataGridHeaderFilter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>AvaloniaDataGridHeaderFilter</PackageId>
+    <PackageId>Huwei96.AvaloniaControls.DataGridHeaderFilter</PackageId>
     <Title>Avalonia DataGrid HeaderFilter</Title>
-  <Version>0.1.8</Version>
+  <Version>0.2.0</Version>
     <Authors>Huwei96</Authors>
     <Company>Huwei96</Company>
     <Description>Header filter control for Avalonia DataGrid with popup filter panel, tri-state select, search, and sort-compatible filtering.</Description>

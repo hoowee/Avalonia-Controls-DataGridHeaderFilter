@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.Models;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 
 public class XmlSerializerExtension
 {

@@ -18,8 +18,8 @@ jobs:
   pack-and-push:
     runs-on: windows-2022
     env:
-      PROJECT_PATH: Avalonia.Controls.DataGrid.HeaderFilter.csproj
-      PACKAGE_ID: AvaloniaDataGridHeaderFilter
+      PROJECT_PATH: Huwei96.AvaloniaControls.DataGridHeaderFilter.csproj
+      PACKAGE_ID: Huwei96.AvaloniaControls.DataGridHeaderFilter
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout

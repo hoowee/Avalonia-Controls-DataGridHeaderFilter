@@ -1,6 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:controls="clr-namespace:Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;assembly=Avalonia.Controls.DataGrid.HeaderFilter">
+  xmlns:controls="clr-namespace:Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;assembly=Huwei96.AvaloniaControls.DataGridHeaderFilter">
 
   <Style Selector="controls|DataGridFilterColumnControl">
     <!-- 放大控件尺寸，让图标更易点 -->

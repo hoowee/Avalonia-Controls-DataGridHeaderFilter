@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.Models;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 
 public enum ColumnFilterTag
 {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.Models;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 
 public class ColumnFilterGroups
 {

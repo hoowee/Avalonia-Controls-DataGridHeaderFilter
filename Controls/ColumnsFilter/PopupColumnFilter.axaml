@@ -1,8 +1,8 @@
 <Popup xmlns="https://github.com/avaloniaui"
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:models="clr-namespace:Avalonia.Controls.DataGridHeaderFilter.Models;assembly=Avalonia.Controls.DataGrid.HeaderFilter"
-  xmlns:self="clr-namespace:Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;assembly=Avalonia.Controls.DataGrid.HeaderFilter"
-  x:Class="Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter.PopupColumnFilter"
+  xmlns:models="clr-namespace:Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;assembly=Huwei96.AvaloniaControls.DataGridHeaderFilter"
+  xmlns:self="clr-namespace:Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;assembly=Huwei96.AvaloniaControls.DataGridHeaderFilter"
+  x:Class="Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter.PopupColumnFilter"
   x:DataType="self:PopupColumnFilter"
   MinWidth="300" MinHeight="300" Opacity="1" IsHitTestVisible="True">
   <Border Name="_popupBorder"

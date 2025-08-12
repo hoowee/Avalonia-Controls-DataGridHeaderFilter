@@ -2,7 +2,7 @@ using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;
 
 public class DataGridFilter : AvaloniaObject
 {

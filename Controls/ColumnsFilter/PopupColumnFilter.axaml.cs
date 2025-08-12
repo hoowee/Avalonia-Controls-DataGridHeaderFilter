@@ -5,7 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Collections;
-using Avalonia.Controls.DataGridHeaderFilter.Models;
+using Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;
+namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;
 
 public partial class PopupColumnFilter : Popup, INotifyPropertyChanged
 {

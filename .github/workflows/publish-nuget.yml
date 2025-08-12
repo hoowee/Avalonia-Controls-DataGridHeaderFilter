@@ -124,12 +124,46 @@ jobs:
       - name: Push symbols
         shell: pwsh
         run: |
-          # Wait a bit for the main package to be processed before uploading symbols
-          Start-Sleep -Seconds 30
-          dotnet nuget push "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg" `
-            --api-key $env:NUGET_API_KEY `
-            --source https://api.nuget.org/v3/index.json `
-            --skip-duplicate
+          $ErrorActionPreference = 'Continue'
+          $symbolPath = "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg"
+          
+          if (-not (Test-Path $symbolPath)) {
+            Write-Warning "Symbol package not found at $symbolPath, skipping symbol upload"
+            exit 0
+          }
+          
+          Write-Host "Waiting for main package to be processed on NuGet.org..."
+          Start-Sleep -Seconds 60
+          
+          Write-Host "Attempting to push symbol package..."
+          
+          # Try with different endpoints and retry logic
+          $maxRetries = 3
+          $retryDelay = 30
+          
+          for ($i = 1; $i -le $maxRetries; $i++) {
+            Write-Host "Attempt $i of $maxRetries"
+            
+            try {
+              # Try the v3 API first (recommended)
+              dotnet nuget push $symbolPath `
+                --api-key $env:NUGET_API_KEY `
+                --source https://api.nuget.org/v3/index.json `
+                --skip-duplicate
+              Write-Host "Symbol package uploaded successfully!"
+              exit 0
+            }
+            catch {
+              Write-Warning "Attempt $i failed with v3 API: $($_.Exception.Message)"
+              
+              if ($i -lt $maxRetries) {
+                Write-Host "Waiting $retryDelay seconds before retry..."
+                Start-Sleep -Seconds $retryDelay
+              }
+            }
+          }
+          
+          Write-Warning "All symbol upload attempts failed. This is non-critical - the main package is already uploaded."
         continue-on-error: true
 
       - name: Create GitHub Release

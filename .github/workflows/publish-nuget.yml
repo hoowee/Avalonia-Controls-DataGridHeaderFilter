@@ -40,17 +40,8 @@ jobs:
       - name: Dotnet info
         run: dotnet --info
 
-      - name: Restore (try all TFMs)
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          try {
-            dotnet restore $env:PROJECT_PATH -p:TargetFrameworks="net9.0;net8.0;net7.0;net6.0"
-          }
-          catch {
-            Write-Warning "Restore with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
-            dotnet restore $env:PROJECT_PATH -p:TargetFrameworks="net8.0;net7.0;net6.0"
-          }
+      - name: Restore
+        run: dotnet restore $env:PROJECT_PATH
 
       - name: Determine Version
         id: version
@@ -88,16 +79,16 @@ jobs:
             dotnet pack $env:PROJECT_PATH -c Release `
               -p:PackageVersion=${{ steps.version.outputs.version }} `
               -p:ContinuousIntegrationBuild=true `
-              -p:TargetFrameworks="$tfms" `
+              -p:TargetFrameworks='$tfms' `
               --no-restore `
               -o nupkg
           }
           try {
-            Pack "net9.0;net8.0;net7.0;net6.0"
+            Pack 'net9.0;net8.0;net7.0;net6.0'
           }
           catch {
             Write-Warning "Pack with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
-            Pack "net8.0;net7.0;net6.0"
+            Pack 'net8.0;net7.0;net6.0'
           }
 
       - name: Show packages

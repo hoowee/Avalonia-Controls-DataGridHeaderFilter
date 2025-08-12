@@ -114,56 +114,36 @@ jobs:
       - name: Show packages
         run: dir nupkg
 
-      - name: Push package
-        run: >-
-          dotnet nuget push "nupkg/$env:PACKAGE_ID.$env:PKGVER.nupkg"
-          --api-key ${{ secrets.NUGET_API_KEY }}
-          --source https://api.nuget.org/v3/index.json
-          --skip-duplicate
-
-      - name: Push symbols
+      - name: Push package and symbols together
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Continue'
+          $ErrorActionPreference = 'Stop'
+          # Push main package (will include symbols automatically if present)
+          dotnet nuget push "nupkg/$env:PACKAGE_ID.$env:PKGVER.nupkg" `
+            --api-key $env:NUGET_API_KEY `
+            --source https://api.nuget.org/v3/index.json `
+            --skip-duplicate
+          
+          Write-Host "Main package pushed successfully!"
+
+      - name: Push symbols (if exists)
+        shell: pwsh
+        run: |
           $symbolPath = "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg"
           
-          if (-not (Test-Path $symbolPath)) {
-            Write-Warning "Symbol package not found at $symbolPath, skipping symbol upload"
-            exit 0
-          }
-          
-          Write-Host "Waiting for main package to be processed on NuGet.org..."
-          Start-Sleep -Seconds 60
-          
-          Write-Host "Attempting to push symbol package..."
-          
-          # Try with different endpoints and retry logic
-          $maxRetries = 3
-          $retryDelay = 30
-          
-          for ($i = 1; $i -le $maxRetries; $i++) {
-            Write-Host "Attempt $i of $maxRetries"
+          if (Test-Path $symbolPath) {
+            Write-Host "Symbol package found, waiting for main package processing..."
+            Start-Sleep -Seconds 90  # Give NuGet.org more time to process the main package
             
-            try {
-              # Try the v3 API first (recommended)
-              dotnet nuget push $symbolPath `
-                --api-key $env:NUGET_API_KEY `
-                --source https://api.nuget.org/v3/index.json `
-                --skip-duplicate
-              Write-Host "Symbol package uploaded successfully!"
-              exit 0
-            }
-            catch {
-              Write-Warning "Attempt $i failed with v3 API: $($_.Exception.Message)"
-              
-              if ($i -lt $maxRetries) {
-                Write-Host "Waiting $retryDelay seconds before retry..."
-                Start-Sleep -Seconds $retryDelay
-              }
-            }
+            Write-Host "Uploading symbol package..."
+            dotnet nuget push $symbolPath `
+              --api-key $env:NUGET_API_KEY `
+              --source https://api.nuget.org/v3/index.json `
+              --skip-duplicate
+            Write-Host "Symbol package uploaded successfully!"
+          } else {
+            Write-Host "No symbol package found, skipping symbol upload"
           }
-          
-          Write-Warning "All symbol upload attempts failed. This is non-critical - the main package is already uploaded."
         continue-on-error: true
 
       - name: Create GitHub Release

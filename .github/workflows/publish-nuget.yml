@@ -40,8 +40,17 @@ jobs:
       - name: Dotnet info
         run: dotnet --info
 
-      - name: Restore
-        run: dotnet restore $env:PROJECT_PATH
+      - name: Restore (try all TFMs)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          try {
+            dotnet restore $env:PROJECT_PATH -p:TargetFrameworks="net9.0;net8.0;net7.0;net6.0"
+          }
+          catch {
+            Write-Warning "Restore with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
+            dotnet restore $env:PROJECT_PATH -p:TargetFrameworks="net8.0;net7.0;net6.0"
+          }
 
       - name: Determine Version
         id: version
@@ -71,13 +80,25 @@ jobs:
           if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY is not set in repository secrets.' }
           Write-Host "NUGET_API_KEY detected (length:" ($env:NUGET_API_KEY.Length) ")"
 
-      - name: Build & Pack
-        run: >-
-          dotnet pack $env:PROJECT_PATH -c Release
-          -p:PackageVersion=${{ steps.version.outputs.version }}
-          -p:ContinuousIntegrationBuild=true
-          --no-restore
-          -o nupkg
+      - name: Build & Pack (with net9, fallback without)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          function Pack($tfms) {
+            dotnet pack $env:PROJECT_PATH -c Release `
+              -p:PackageVersion=${{ steps.version.outputs.version }} `
+              -p:ContinuousIntegrationBuild=true `
+              -p:TargetFrameworks="$tfms" `
+              --no-restore `
+              -o nupkg
+          }
+          try {
+            Pack "net9.0;net8.0;net7.0;net6.0"
+          }
+          catch {
+            Write-Warning "Pack with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
+            Pack "net8.0;net7.0;net6.0"
+          }
 
       - name: Show packages
         run: dir nupkg

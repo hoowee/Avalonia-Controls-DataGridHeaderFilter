@@ -114,37 +114,25 @@ jobs:
       - name: Show packages
         run: dir nupkg
 
-      - name: Push package and symbols together
+      - name: Push package (main package only)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          # Push main package (will include symbols automatically if present)
+          # Push main package only - symbols are not critical for most packages
           dotnet nuget push "nupkg/$env:PACKAGE_ID.$env:PKGVER.nupkg" `
             --api-key $env:NUGET_API_KEY `
             --source https://api.nuget.org/v3/index.json `
             --skip-duplicate
-          
-          Write-Host "Main package pushed successfully!"
 
-      - name: Push symbols (if exists)
-        shell: pwsh
-        run: |
-          $symbolPath = "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg"
+          Write-Host "Package pushed successfully!"
           
+          # Check if symbol package exists and log it
+          $symbolPath = "nupkg/$env:PACKAGE_ID.$env:PKGVER.snupkg"
           if (Test-Path $symbolPath) {
-            Write-Host "Symbol package found, waiting for main package processing..."
-            Start-Sleep -Seconds 90  # Give NuGet.org more time to process the main package
-            
-            Write-Host "Uploading symbol package..."
-            dotnet nuget push $symbolPath `
-              --api-key $env:NUGET_API_KEY `
-              --source https://api.nuget.org/v3/index.json `
-              --skip-duplicate
-            Write-Host "Symbol package uploaded successfully!"
+            Write-Host "Symbol package was generated but will not be uploaded (symbols are optional)"
           } else {
-            Write-Host "No symbol package found, skipping symbol upload"
+            Write-Host "No symbol package was generated"
           }
-        continue-on-error: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

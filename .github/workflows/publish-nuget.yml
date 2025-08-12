@@ -71,24 +71,25 @@ jobs:
           if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY is not set in repository secrets.' }
           Write-Host "NUGET_API_KEY detected (length:" ($env:NUGET_API_KEY.Length) ")"
 
-      - name: Build & Pack (with net9, fallback without)
+      - name: Build & Pack (try default, fallback exclude net9)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          function Pack($tfms) {
+          try {
             dotnet pack $env:PROJECT_PATH -c Release `
               -p:PackageVersion=${{ steps.version.outputs.version }} `
               -p:ContinuousIntegrationBuild=true `
-              -p:TargetFrameworks="$tfms" `
               --no-restore `
               -o nupkg
           }
-          try {
-            Pack 'net9.0;net8.0;net7.0;net6.0'
-          }
           catch {
-            Write-Warning "Pack with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
-            Pack 'net8.0;net7.0;net6.0'
+            Write-Warning "Default pack failed (likely net9). Retrying with ExcludeTargetFrameworks=net9.0. Details: $($_.Exception.Message)"
+            dotnet pack $env:PROJECT_PATH -c Release `
+              -p:PackageVersion=${{ steps.version.outputs.version }} `
+              -p:ContinuousIntegrationBuild=true `
+              -p:ExcludeTargetFrameworks=net9.0 `
+              --no-restore `
+              -o nupkg
           }
 
       - name: Show packages

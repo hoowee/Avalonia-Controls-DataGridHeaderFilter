@@ -16,8 +16,8 @@
     <Description>Header filter control for Avalonia DataGrid with popup filter panel, tri-state select, search, and sort-compatible filtering.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://example.com/your-repo</RepositoryUrl>
-    <PackageProjectUrl>https://example.com/your-repo</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/hoowee/Avalonia-Controls-DataGridHeaderFilter</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/hoowee/Avalonia-Controls-DataGridHeaderFilter</PackageProjectUrl>
     <PackageTags>avalonia;datagrid;filter;header;sorting;ui;mvvm</PackageTags>
   </PropertyGroup>
 

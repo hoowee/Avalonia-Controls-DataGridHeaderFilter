@@ -1,5 +1,9 @@
 name: Publish NuGet
 
+permissions:
+  contents: write
+  packages: write
+
 on:
   push:
     tags:
@@ -12,10 +16,11 @@ on:
 
 jobs:
   pack-and-push:
-    runs-on: windows-latest
+    runs-on: windows-2022
     env:
       PROJECT_PATH: Avalonia.Controls.DataGrid.HeaderFilter.csproj
       PACKAGE_ID: Avalonia.Controls.DataGrid.HeaderFilter
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,6 +32,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Setup .NET 8 (for tooling compatibility)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Dotnet info
+        run: dotnet --info
+
       - name: Restore
         run: dotnet restore $env:PROJECT_PATH
 
@@ -34,15 +47,29 @@ jobs:
         id: version
         shell: pwsh
         run: |
+          # Prefer manual input
           if ($env:GITHUB_EVENT_NAME -eq 'workflow_dispatch' -and '${{ github.event.inputs.version }}') {
             $ver = '${{ github.event.inputs.version }}'
-          } else {
-            # tag format vX.Y.Z or vX.Y.Z-preview1
-            $tag = '${{ github.ref_name }}'
-            if ($tag -match '^v(?<v>[0-9]+\.[0-9]+\.[0-9]+.*)$') { $ver = $Matches['v'] } else { throw 'Tag name must start with v' }
           }
+          # If not provided, try to parse from tag (vX.Y.Z...)
+          if (-not $ver) {
+            $tag = '${{ github.ref_name }}'
+            if ($tag -match '^v(?<v>[0-9]+\.[0-9]+\.[0-9]+.*)$') { $ver = $Matches['v'] }
+          }
+          # Fallback: read <Version> from csproj
+          if (-not $ver) {
+            [xml]$xml = Get-Content $env:PROJECT_PATH
+            $ver = ($xml.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ } | Select-Object -First 1)
+          }
+          if (-not $ver) { throw 'Unable to resolve version. Provide input or ensure tag starts with v<version> or csproj contains <Version>.' }
           echo "Resolved version: $ver"
           echo "version=$ver" >> $GITHUB_OUTPUT
+
+      - name: Validate Secrets
+        shell: pwsh
+        run: |
+          if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY is not set in repository secrets.' }
+          Write-Host "NUGET_API_KEY detected (length:" ($env:NUGET_API_KEY.Length) ")"
 
       - name: Build & Pack
         run: >-

@@ -64,6 +64,7 @@ jobs:
           if (-not $ver) { throw 'Unable to resolve version. Provide input or ensure tag starts with v<version> or csproj contains <Version>.' }
           echo "Resolved version: $ver"
           echo "version=$ver" >> $GITHUB_OUTPUT
+          echo "PKGVER=$ver" >> $env:GITHUB_ENV
 
       - name: Validate Secrets
         shell: pwsh
@@ -75,9 +76,11 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          $pkgVer = '${{ steps.version.outputs.version }}'
           try {
             dotnet pack $env:PROJECT_PATH -c Release `
-              -p:PackageVersion=${{ steps.version.outputs.version }} `
+              -p:PackageVersion=$pkgVer `
+              -p:Version=$pkgVer `
               -p:ContinuousIntegrationBuild=true `
               --no-restore `
               -o nupkg
@@ -85,7 +88,8 @@ jobs:
           catch {
             Write-Warning "Default pack failed (likely net9). Retrying with ExcludeTargetFrameworks=net9.0. Details: $($_.Exception.Message)"
             dotnet pack $env:PROJECT_PATH -c Release `
-              -p:PackageVersion=${{ steps.version.outputs.version }} `
+              -p:PackageVersion=$pkgVer `
+              -p:Version=$pkgVer `
               -p:ContinuousIntegrationBuild=true `
               -p:ExcludeTargetFrameworks=net9.0 `
               --no-restore `

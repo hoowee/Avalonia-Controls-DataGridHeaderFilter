@@ -79,7 +79,7 @@ jobs:
             dotnet pack $env:PROJECT_PATH -c Release `
               -p:PackageVersion=${{ steps.version.outputs.version }} `
               -p:ContinuousIntegrationBuild=true `
-              -p:TargetFrameworks='$tfms' `
+              -p:TargetFrameworks="$tfms" `
               --no-restore `
               -o nupkg
           }

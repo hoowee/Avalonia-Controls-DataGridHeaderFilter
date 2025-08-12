@@ -1,0 +1,73 @@
+<Styles xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:controls="clr-namespace:Avalonia.Controls.DataGridHeaderFilter.ColumnsFilter;assembly=Avalonia.Controls.DataGrid.HeaderFilter">
+
+  <Style Selector="controls|DataGridFilterColumnControl">
+    <!-- 放大控件尺寸，让图标更易点 -->
+    <Setter Property="Width" Value="24"/>
+    <Setter Property="Height" Value="24"/>
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid ColumnDefinitions="Auto">
+          <Button x:Name="PART_ColumnIdBtn" Width="24" MinHeight="24" Padding="0" Margin="0" VerticalAlignment="Center"
+                   Background="Transparent" BorderBrush="Transparent" CornerRadius="4" ClipToBounds="True"
+                   HorizontalAlignment="Right" ToolTip.Tip="筛选">
+            <Button.Styles>
+              <!-- 与表头更协调：常态透明，悬停轻微灰，按下稍深灰 -->
+              <Style Selector="Button:pointerover">
+                <Setter Property="Background" Value="#F2F2F2"/>
+              </Style>
+              <Style Selector="Button:pressed">
+                <Setter Property="Background" Value="#E5E5E5"/>
+              </Style>
+            </Button.Styles>
+    <Grid>
+  <Path Width="11" Height="11" Stretch="Uniform" Margin="0"
+        HorizontalAlignment="Center" VerticalAlignment="Center"
+        StrokeThickness="1.0" Stroke="{TemplateBinding FillColor}" StrokeJoin="Round" StrokeLineCap="Round"
+                    Data="M1.2,1.2 L9.8,1.2 L5.5,6 L5.5,9.6 L4.4,9.6 L4.4,6 Z"/>
+              <!-- 右上角小圆点徽标：有筛选时显示 -->
+              <Ellipse Width="6" Height="6" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="1"
+                       IsVisible="{TemplateBinding HasActiveFilter}">
+                <Ellipse.Fill>
+                  <SolidColorBrush Color="#2D7FF9" />
+                </Ellipse.Fill>
+                <Ellipse.Styles>
+                  <Style Selector="Ellipse">
+                    <Setter Property="Fill" Value="{DynamicResource ThemeAccentBrush}" />
+                  </Style>
+                </Ellipse.Styles>
+              </Ellipse>
+            </Grid>
+          </Button>
+          <controls:PopupColumnFilter x:Name="PART_PopupFilterControl"
+                                      PlacementTarget="{Binding #PART_ColumnIdBtn}"
+                                      Placement="Bottom"
+                                      MinWidth="280"
+                                      Topmost="True"
+                                      IsLightDismissEnabled="True"/>
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <!-- Apply filter button into DataGridColumnHeader -->
+  <Style Selector="DataGrid DataGridColumnHeader">
+    <Setter Property="Padding" Value="6,0,6,0"/>
+    <Setter Property="MinHeight" Value="26"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="ContentTemplate">
+      <Setter.Value>
+        <DataTemplate>
+          <Grid VerticalAlignment="Stretch">
+            <!-- 预留右侧 40px（筛选按钮24 + 排序箭头约16） -->
+            <ContentPresenter Content="{Binding}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,40,0"/>
+            <!-- 筛选按钮靠右但左移 16px，给最右侧保留排序箭头区域 -->
+            <controls:DataGridFilterColumnControl HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0"/>
+          </Grid>
+        </DataTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</Styles>

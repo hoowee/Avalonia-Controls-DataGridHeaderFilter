@@ -1,0 +1,32 @@
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+
+# IDE caches
+.vs/
+.idea/
+*.user
+*.suo
+
+# Logs
+logs/
+*.log
+
+# Packages
+*.nupkg
+*.snupkg
+
+# Tests & coverage
+TestResults/
+coverage/
+
+# OS files
+[Dd]esktop.ini
+Thumbs.db
+
+# Tooling
+_ReSharper*/
+*.DotSettings.user
+
+# Others
+*.cache

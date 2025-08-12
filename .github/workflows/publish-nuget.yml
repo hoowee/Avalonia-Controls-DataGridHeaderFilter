@@ -73,30 +73,43 @@ jobs:
           if (-not $env:NUGET_API_KEY) { throw 'NUGET_API_KEY is not set in repository secrets.' }
           Write-Host "NUGET_API_KEY detected (length:" ($env:NUGET_API_KEY.Length) ")"
 
-      - name: Build & Pack (try default, fallback exclude net9)
+      - name: Build (with net9, fallback without)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          # Prefer the PKGVER exported via GITHUB_ENV by the previous step
           $pkgVer = $env:PKGVER
-          try {
-            dotnet pack $env:PROJECT_PATH -c Release `
+          function Build-TFMs($tfms) {
+            dotnet build $env:PROJECT_PATH -c Release `
               -p:PackageVersion=$pkgVer `
               -p:Version=$pkgVer `
               -p:ContinuousIntegrationBuild=true `
-              --no-restore `
-              -o nupkg
+              -p:TargetFrameworks="$tfms"
+          }
+          try {
+            Build-TFMs "net9.0;net8.0;net7.0;net6.0"
+            $built = "net9.0;net8.0;net7.0;net6.0"
           }
           catch {
-            Write-Warning "Default pack failed (likely net9). Retrying with ExcludeTargetFrameworks=net9.0. Details: $($_.Exception.Message)"
-            dotnet pack $env:PROJECT_PATH -c Release `
-              -p:PackageVersion=$pkgVer `
-              -p:Version=$pkgVer `
-              -p:ContinuousIntegrationBuild=true `
-              -p:ExcludeTargetFrameworks=net9.0 `
-              --no-restore `
-              -o nupkg
+            Write-Warning "Build with net9 failed. Retrying without net9. Details: $($_.Exception.Message)"
+            Build-TFMs "net8.0;net7.0;net6.0"
+            $built = "net8.0;net7.0;net6.0"
           }
+          Add-Content -Path $env:GITHUB_ENV -Value "TFMS_BUILT=$built"
+
+      - name: Pack (NoBuild, use built TFMs)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $pkgVer = $env:PKGVER
+          $tfms = $env:TFMS_BUILT
+          if (-not $tfms) { throw 'TFMS_BUILT is empty. Build step may have failed.' }
+          dotnet pack $env:PROJECT_PATH -c Release `
+            -p:PackageVersion=$pkgVer `
+            -p:Version=$pkgVer `
+            -p:ContinuousIntegrationBuild=true `
+            -p:TargetFrameworks="$tfms" `
+            -p:NoBuild=true `
+            -o nupkg
 
       - name: Show packages
         run: dir nupkg

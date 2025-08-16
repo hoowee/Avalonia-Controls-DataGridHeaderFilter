@@ -1,6 +1,6 @@
-# Huwei96.AvaloniaControls.DataGridHeaderFilter 使用指南
+# Avalonia.Controls.DataGrid.HeaderFilter 使用指南
 
-本指南介绍如何在 Avalonia 11 应用中集成并使用 DataGrid 列头筛选组件（Huwei96.AvaloniaControls.DataGridHeaderFilter）。
+本指南介绍如何在 Avalonia 11 应用中集成并使用 DataGrid 列头筛选组件（Avalonia.Controls.DataGrid.HeaderFilter）。
 
 ## 前提
 
@@ -10,7 +10,7 @@
 常用命名空间：
 
 - DataGrid：`xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"`
-- 筛选控件：`xmlns:filter="clr-namespace:Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;assembly=Huwei96.AvaloniaControls.DataGridHeaderFilter"`
+- 筛选控件：`xmlns:filter="clr-namespace:DataGridHeaderFilter.Avalonia.Controls.ColumnsFilter;assembly=Avalonia.Controls.DataGrid.HeaderFilter"`
 
 ## 1) 在 App.axaml 引入样式
 
@@ -22,7 +22,7 @@
   <Application.Styles>
     <FluentTheme />
     <!-- 引入库的默认样式 -->
-  <StyleInclude Source="avares://Huwei96.AvaloniaControls.DataGridHeaderFilter/Themes/Generic.axaml" />
+  <StyleInclude Source="avares://Avalonia.Controls.DataGrid.HeaderFilter/Themes/Generic.axaml" />
   </Application.Styles>
 </Application>
 ```
@@ -67,7 +67,7 @@ public ObservableCollection<MyRow> Items { get; } = new();
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid"
-  xmlns:filter="clr-namespace:Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;assembly=Huwei96.AvaloniaControls.DataGridHeaderFilter">
+  xmlns:filter="clr-namespace:DataGridHeaderFilter.Avalonia.Controls.ColumnsFilter;assembly=Avalonia.Controls.DataGrid.HeaderFilter">
   <controls:DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False">
     <controls:DataGrid.Columns>
       <controls:DataGridTextColumn>
@@ -122,7 +122,7 @@ public ObservableCollection<MyRow> Items { get; } = new();
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Application.Styles>
     <FluentTheme />
-  <StyleInclude Source="avares://Huwei96.AvaloniaControls.DataGridHeaderFilter/Themes/Generic.axaml" />
+  <StyleInclude Source="avares://Avalonia.Controls.DataGrid.HeaderFilter/Themes/Generic.axaml" />
   </Application.Styles>
 </Application>
 ```

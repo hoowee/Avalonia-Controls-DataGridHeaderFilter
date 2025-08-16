@@ -10,7 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Huwei96.AvaloniaControls.DataGridHeaderFilter</PackageId>
     <Title>Avalonia DataGrid HeaderFilter</Title>
-  <Version>0.2.1</Version>
+  <Version>0.2.2</Version>
     <Authors>Huwei96</Authors>
     <Company>Huwei96</Company>
     <Description>Header filter control for Avalonia DataGrid with popup filter panel, tri-state select, search, and sort-compatible filtering.</Description>
@@ -30,8 +30,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.3" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.3" />
+    <PackageReference Include="Avalonia" Version="11.3.0" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
   <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 

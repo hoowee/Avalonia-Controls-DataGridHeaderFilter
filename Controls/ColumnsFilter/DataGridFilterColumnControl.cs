@@ -7,7 +7,6 @@ using Avalonia.VisualTree;
 using System.Collections.Generic;
 using System.Reflection;
 using Avalonia.Styling;
-using Huwei96.AvaloniaControls.DataGridHeaderFilter.Models;
 
 namespace Huwei96.AvaloniaControls.DataGridHeaderFilter.ColumnsFilter;
 
@@ -136,7 +135,7 @@ public static class Ext
         return current;
     }
 
-    internal static List<ColumnFilter> BuildColumnItems(DataGrid grid, string propertyPath)
+    internal static List<Avalonia.Controls.DataGridHeaderFilter.Models.ColumnFilter> BuildColumnItems(DataGrid grid, string propertyPath)
     {
         var result = new Dictionary<string, int>(System.StringComparer.OrdinalIgnoreCase);
         if (grid.ItemsSource is System.Collections.IEnumerable src)
@@ -148,9 +147,9 @@ public static class Ext
                 else result[val] = 1;
             }
         }
-    var list = new List<ColumnFilter>();
+    var list = new List<Avalonia.Controls.DataGridHeaderFilter.Models.ColumnFilter>();
         foreach (var kv in result)
-            list.Add(new ColumnFilter(false, kv.Key, kv.Value));
+            list.Add(new Avalonia.Controls.DataGridHeaderFilter.Models.ColumnFilter(false, kv.Key, kv.Value));
         list.Sort((a,b) => string.Compare(a.Title, b.Title, System.StringComparison.OrdinalIgnoreCase));
         return list;
     }
